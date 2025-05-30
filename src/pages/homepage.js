@@ -3,21 +3,24 @@ import '../styles/login.css';
 import { LoginPage } from './loginpage';
 import { getRecommendedGames, getTrendingGames } from '../api';
 
-document.addEventListener('DOMContentLoaded', () => {
-    const loginBtn = document.getElementById('login-btn');
-    if (loginBtn) {
-        loginBtn.addEventListener('click', () => {
-            const app = document.getElementById('app');
-            app.innerHTML = LoginPage();
-        });
+// Routing handler
+function handleRouting() {
+    const app = document.getElementById('app');
+    if (window.location.hash === '#/login') {
+        app.innerHTML = LoginPage();
+    } else {
+        render();
     }
-});
+}
+
+window.addEventListener('hashchange', handleRouting);
+document.addEventListener('DOMContentLoaded', handleRouting);
 
 function createGameCard(game) {
+    const posterUrl = `https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/header.jpg`;
     return `
     <div class="game-card">
-        ${game.percentage ? `<div class="game-percent">${game.percentage}</div>` : ''}
-        ${game.hot ? `<div class="hot-badge">HOT</div>` : ''}
+        <img class="game-poster" src="${posterUrl}" alt="${game.title} poster" />
         <h3>${game.title}</h3>
         <div class="game-genres">
             ${game.genres.map(genre => `<span class="genre-badge">${genre}</span>`).join('')}
@@ -161,8 +164,7 @@ async function render() {
     const loginBtn = document.getElementById('login-btn');
     if (loginBtn) {
         loginBtn.addEventListener('click', () => {
-            const app = document.getElementById('app');
-            app.innerHTML = LoginPage();
+            window.location.hash = '#/login';
         });
     }
 
@@ -196,5 +198,3 @@ async function render() {
 
     document.querySelector('.signup-banner').style.display = 'block';
 }
-
-render();
