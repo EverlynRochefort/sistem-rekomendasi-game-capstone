@@ -4,3 +4,5 @@ Sebuah aplikasi web dengan fitur menampilkan list game yang hits, up to date ser
 Jalankan dashboard (terminal) :
 - npm run start-dev
 - node src/pages/steam-proxy.js
+
+Update untuk fitur search-bar
