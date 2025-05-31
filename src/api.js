@@ -63,4 +63,30 @@ export async function getTrendingGames() {
         return [];
     }
 }
+
+export async function searchGames(query) {
+    try {
+        const gameDetails = await Promise.all(
+            popularAppIds.map(async (appid) => {
+                const detail = await fetchGameDetails(appid);
+                if (detail.success) {
+                    return {
+                        title: detail.data.name,
+                        description: detail.data.short_description,
+                        genres: detail.data.genres ? detail.data.genres.map(g => g.description) : [],
+                        appid: appid
+                    };
+                }
+                return null;
+            })
+        );
+        const allGames = gameDetails.filter(game => game !== null);
+        return allGames.filter(game => 
+            game.title.toLowerCase().includes(query.toLowerCase())
+        );
+    } catch (error) {
+        console.error('Error searching games:', error);
+        return [];
+    }
+}
     

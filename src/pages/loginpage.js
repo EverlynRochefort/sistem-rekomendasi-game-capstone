@@ -33,7 +33,7 @@ export function LoginPage() {
             <p class="welcome-text">
                 Welcome back! We are so happy to have you here. It's great to see you again. We hope you had a safe and enjoyable time away.
             </p>
-            <p class="signup-text">No account yet? Signup.</p>
+            <p class="signup-text">No account yet? <a href="/register">Signup.</a></p>
         </div>
     </div>
     `;

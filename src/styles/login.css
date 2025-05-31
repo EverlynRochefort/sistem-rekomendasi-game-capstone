@@ -154,3 +154,8 @@ body {
     font-family: sans-serif;
     font-weight: bold;
 }
+
+.signup-text a {
+    color: white;
+    text-decoration: underline;
+}

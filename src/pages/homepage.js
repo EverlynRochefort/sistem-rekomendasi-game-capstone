@@ -3,7 +3,7 @@ import "../styles/login.css";
 import "../styles/register.css"; // added
 import { LoginPage } from "./loginpage";
 import { RegisterPage } from "./registerpage"; // added
-import { getRecommendedGames, getTrendingGames } from "../api";
+import { getRecommendedGames, getTrendingGames, searchGames } from "../api";
 
 // Routing handler
 function handleRouting() {
@@ -66,8 +66,8 @@ async function render() {
         <h1>Temukan Game Terbaik untuk Anda</h1>
         <p>Sistem rekomendasi game pintar yang memahami selera Anda dan menyarankan game yang akan Anda sukai.</p>
         <div class="search-bar">
-            <input type="text" placeholder="Cari game atau masukkan game favorit Anda..." />
-            <button class="search-btn">🔍</button>
+            <input type="text" id="search-input" placeholder="Cari game atau masukkan game favorit Anda..." />
+            <button class="search-btn" id="search-btn">🔍</button>
         </div>
     </section>
 
@@ -104,6 +104,13 @@ async function render() {
         <section class="trending-section">
             <h2>Trending Minggu Ini</h2>
             <div class="game-grid" id="trending-list">
+                <div class="loading">Loading...</div>
+            </div>
+        </section>
+
+        <section class="search-results-section" style="display: none;">
+            <h2>Hasil Pencarian</h2>
+            <div class="game-grid" id="search-results">
                 <div class="loading">Loading...</div>
             </div>
         </section>
@@ -229,4 +236,46 @@ async function render() {
   });
 
   document.querySelector(".signup-banner").style.display = "block";
+
+  // Action untuk fitur search
+  const searchInput = document.getElementById("search-input");
+  const searchBtn = document.getElementById("search-btn");
+  const searchResultsSection = document.querySelector(".search-results-section");
+  const recommendSection = document.querySelector(".recommend-section");
+  const trendingSection = document.querySelector(".trending-section");
+
+  async function handleSearch() {
+    const query = searchInput.value.trim();
+    if (query) {
+      searchResultsSection.style.display = "block";
+      recommendSection.style.display = "none";
+      trendingSection.style.display = "none";
+      
+      const searchResults = document.getElementById("search-results");
+      searchResults.innerHTML = '<div class="loading">Mencari game...</div>';
+      
+      try {
+        const results = await searchGames(query);
+        if (results.length > 0) {
+          searchResults.innerHTML = results.map(game => createGameCard(game)).join("");
+        } else {
+          searchResults.innerHTML = '<div class="no-results">Game yang kamu cari ga ada nih :(</div>';
+        }
+      } catch (error) {
+        console.error("Error searching games:", error);
+        searchResults.innerHTML = '<div class="error">Error saat mencari game</div>';
+      }
+    } else {
+      searchResultsSection.style.display = "none";
+      recommendSection.style.display = "block";
+      trendingSection.style.display = "block";
+    }
+  }
+
+  searchBtn.addEventListener("click", handleSearch);
+  searchInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  });
 }

@@ -63,7 +63,7 @@ body {
 }
 
 .nav-links li {
-    color: #8a9ba8;
+    color: white;
     font-weight: 500;
     cursor: pointer;
     transition: color 0.2s;
@@ -82,7 +82,7 @@ body {
 
 .register-btn {
     background: transparent;
-    color: #8a9ba8;
+    color: white;
     border: 1px solid #8a9ba8;
     border-radius: 6px;
     padding: 8px 20px;
@@ -280,7 +280,8 @@ main {
     margin-top: 30px;
     justify-content: center;
     max-width: 1300px;
-    margin: 30px auto 0 auto;
+    margin: 20px auto 0 auto;
+    padding-bottom: 20px;
 }
 
 .game-card {
@@ -653,5 +654,14 @@ main {
     }
 }
 
+.no-results {
+    margin-bottom: 40px;
+}
 /* Hilangkan persentase */
 .game-percent { display: none !important; }
+
+/* agar user tau dimana page dia berada */
+.nav-links li:first-child {
+    text-decoration: underline;
+    
+}
