@@ -1,39 +1,49 @@
-import '../styles/main.css';
-import '../styles/login.css';
-import { LoginPage } from './loginpage';
-import { getRecommendedGames, getTrendingGames } from '../api';
+import "../styles/main.css";
+import "../styles/login.css";
+import "../styles/register.css"; // added
+import { LoginPage } from "./loginpage";
+import { RegisterPage } from "./registerpage"; // added
+import { getRecommendedGames, getTrendingGames } from "../api";
 
 // Routing handler
 function handleRouting() {
-    const app = document.getElementById('app');
-    if (window.location.hash === '#/login') {
-        app.innerHTML = LoginPage();
-    } else {
-        render();
-    }
+  const app = document.getElementById("app");
+  if (window.location.hash === "#/login") {
+    app.innerHTML = LoginPage();
+  } else if (window.location.hash === "#/register") {
+    app.innerHTML = RegisterPage(); // add the register page
+  } else {
+    render();
+  }
 }
 
-window.addEventListener('hashchange', handleRouting);
-document.addEventListener('DOMContentLoaded', handleRouting);
+window.addEventListener("hashchange", handleRouting);
+document.addEventListener("DOMContentLoaded", handleRouting);
 
 function createGameCard(game) {
-    const posterUrl = `https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/header.jpg`;
-    return `
+  const posterUrl = `https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/header.jpg`;
+  return `
     <div class="game-card">
-        <img class="game-poster" src="${posterUrl}" alt="${game.title} poster" />
+        <img class="game-poster" src="${posterUrl}" alt="${
+    game.title
+  } poster" />
         <h3>${game.title}</h3>
         <div class="game-genres">
-            ${game.genres.map(genre => `<span class="genre-badge">${genre}</span>`).join('')}
+            ${game.genres
+              .map((genre) => `<span class="genre-badge">${genre}</span>`)
+              .join("")}
         </div>
         <p class="game-description">${game.description}</p>
-        <button class="detail-btn" data-appid="${game.appid}">Lihat Detail</button>
+        <button class="detail-btn" data-appid="${
+          game.appid
+        }">Lihat Detail</button>
     </div>
     `;
 }
 
 async function render() {
-    const app = document.getElementById('app');
-    app.innerHTML = `
+  const app = document.getElementById("app");
+  app.innerHTML = `
     <nav class="navbar">
         <div class="logo">
             <span class="logo-icon">🎮</span>
@@ -47,7 +57,7 @@ async function render() {
             <li>Blog</li>
         </ul>
         <div class="auth-buttons">
-            <button class="register-btn">Daftar</button>
+            <button id="register-btn" class="register-btn">Daftar</button>
             <button id="login-btn" class="login-btn">Masuk</button>
         </div>
     </nav>
@@ -101,7 +111,7 @@ async function render() {
         <section class="signup-banner">
             <h2>Dapatkan Rekomendasi yang Lebih Personal</h2>
             <p>Buat akun untuk mendapatkan rekomendasi game yang disesuaikan dengan preferensi dan riwayat bermain Anda.</p>
-            <button class="signup-btn">Buat Akun</button>
+            <button id="signup-btn" class="signup-btn">Buat Akun</button>
             <a href="#" class="learn-more">Pelajari Lebih Lanjut</a>
         </section>
     </main>
@@ -160,41 +170,63 @@ async function render() {
     </footer>
     `;
 
-    // Add event listener ke login page
-    const loginBtn = document.getElementById('login-btn');
-    if (loginBtn) {
-        loginBtn.addEventListener('click', () => {
-            window.location.hash = '#/login';
-        });
-    }
-
-     //Action Recomendation Games
-    try {
-        const recommendedGames = await getRecommendedGames();
-        const recList = document.getElementById('recommendation-list');
-        recList.innerHTML = recommendedGames.map(game => createGameCard(game)).join('');
-    } catch (error) {
-        console.error('Error loading recommended games:', error);
-        document.getElementById('recommendation-list').innerHTML = '<div class="error">Error loading games</div>';
-    }
-
-    //Action Trending Games
-    try {
-        const trendingGames = await getTrendingGames();
-        const trendList = document.getElementById('trending-list');
-        trendList.innerHTML = trendingGames.map(game => createGameCard(game)).join('');
-    } catch (error) {
-        console.error('Error loading trending games:', error);
-        document.getElementById('trending-list').innerHTML = '<div class="error">Error loading games</div>';
-    }
-
-    //Action Detail Button
-    document.querySelectorAll('.detail-btn').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const appId = e.target.dataset.appid;
-            window.open(`https://store.steampowered.com/app/${appId}`, '_blank');
-        });
+  // Add event listener ke login page
+  const loginBtn = document.getElementById("login-btn");
+  if (loginBtn) {
+    loginBtn.addEventListener("click", () => {
+      window.location.hash = "#/login";
     });
+  }
 
-    document.querySelector('.signup-banner').style.display = 'block';
+  // add event listener ke daftar button di navbar
+  const registerBtn = document.getElementById("register-btn");
+  if (registerBtn) {
+    registerBtn.addEventListener("click", () => {
+      window.location.hash = "#/register";
+    });
+  }
+
+  // add event listener ke daftar button di card rekomendasi
+  const signUpBtn = document.getElementById("signup-btn");
+  if (signUpBtn) {
+    signUpBtn.addEventListener("click", () => {
+      window.location.hash = "#/register";
+    });
+  }
+
+  //Action Recomendation Games
+  try {
+    const recommendedGames = await getRecommendedGames();
+    const recList = document.getElementById("recommendation-list");
+    recList.innerHTML = recommendedGames
+      .map((game) => createGameCard(game))
+      .join("");
+  } catch (error) {
+    console.error("Error loading recommended games:", error);
+    document.getElementById("recommendation-list").innerHTML =
+      '<div class="error">Error loading games</div>';
+  }
+
+  //Action Trending Games
+  try {
+    const trendingGames = await getTrendingGames();
+    const trendList = document.getElementById("trending-list");
+    trendList.innerHTML = trendingGames
+      .map((game) => createGameCard(game))
+      .join("");
+  } catch (error) {
+    console.error("Error loading trending games:", error);
+    document.getElementById("trending-list").innerHTML =
+      '<div class="error">Error loading games</div>';
+  }
+
+  //Action Detail Button
+  document.querySelectorAll(".detail-btn").forEach((button) => {
+    button.addEventListener("click", (e) => {
+      const appId = e.target.dataset.appid;
+      window.open(`https://store.steampowered.com/app/${appId}`, "_blank");
+    });
+  });
+
+  document.querySelector(".signup-banner").style.display = "block";
 }
