@@ -6,3 +6,4 @@ Jalankan dashboard (terminal) :
 - node src/pages/steam-proxy.js
 
 Update untuk fitur search-bar
+Update untuk pembuatan halaman deskripsi game (untuk data card game rekomendasi deskripsi page otw ya... Error mulu dah-_-)
