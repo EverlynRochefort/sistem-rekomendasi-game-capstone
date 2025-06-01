@@ -4,7 +4,7 @@ export function RegisterPage() {
     <!-- Left Side - Register Form -->
     <div class="register-form-section">
         <div class="register-form">
-            <h1 class="register-title">Bergabunglah dengan kami</h1>
+            <h1 class="register-title">Join With Us</h1>
 
             <form>
                 <div class="form-group">

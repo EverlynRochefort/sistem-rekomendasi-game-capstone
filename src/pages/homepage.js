@@ -1,17 +1,22 @@
 import "../styles/main.css";
 import "../styles/login.css";
-import "../styles/register.css"; // added
+import "../styles/register.css"; 
 import { LoginPage } from "./loginpage";
-import { RegisterPage } from "./registerpage"; // added
+import { RegisterPage } from "./registerpage"; 
 import { getRecommendedGames, getTrendingGames, searchGames } from "../api";
 
 // Routing handler
-function handleRouting() {
+export function handleRouting() {
   const app = document.getElementById("app");
   if (window.location.hash === "#/login") {
     app.innerHTML = LoginPage();
   } else if (window.location.hash === "#/register") {
     app.innerHTML = RegisterPage(); // add the register page
+  } else if (window.location.hash.startsWith("#/detail/")) {
+    const appId = window.location.hash.split("#/detail/")[1];
+    import("./dekripsipage.js").then(module => {
+      module.renderDeskripsiPage(appId);
+    });
   } else {
     render();
   }
@@ -231,7 +236,7 @@ async function render() {
   document.querySelectorAll(".detail-btn").forEach((button) => {
     button.addEventListener("click", (e) => {
       const appId = e.target.dataset.appid;
-      window.open(`https://store.steampowered.com/app/${appId}`, "_blank");
+      window.location.hash = `#/detail/${appId}`;
     });
   });
 
