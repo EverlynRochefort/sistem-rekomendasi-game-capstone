@@ -81,9 +81,33 @@ export async function searchGames(query) {
             })
         );
         const allGames = gameDetails.filter(game => game !== null);
-        return allGames.filter(game => 
+        const filtered = allGames.filter(game => 
             game.title.toLowerCase().includes(query.toLowerCase())
         );
+        if (filtered.length > 0) {
+            return filtered;
+        }
+        const searchUrl = `http://localhost:3001/api/search?query=${encodeURIComponent(query)}`;
+        const response = await fetch(searchUrl);
+        const data = await response.json();
+        if (Array.isArray(data) && data.length > 0) {
+            const details = await Promise.all(
+                data.map(async (appid) => {
+                    const detail = await fetchGameDetails(appid);
+                    if (detail.success) {
+                        return {
+                            title: detail.data.name,
+                            description: detail.data.short_description,
+                            genres: detail.data.genres ? detail.data.genres.map(g => g.description) : [],
+                            appid: appid
+                        };
+                    }
+                    return null;
+                })
+            );
+            return details.filter(game => game !== null);
+        }
+        return [];
     } catch (error) {
         console.error('Error searching games:', error);
         return [];

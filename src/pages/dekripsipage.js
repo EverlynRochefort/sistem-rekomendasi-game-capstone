@@ -21,6 +21,17 @@ export async function renderDeskripsiPage(appId) {
     const sysreq = data.pc_requirements ? (data.pc_requirements.recommended || data.pc_requirements.minimum || "-") : "-";
     // Ulasan
     const reviews = data.recommendations ? `<div class='review-box'><b>Total Review:</b> ${data.recommendations.total.toLocaleString()}</div>` : "<div class='review-box'>Tidak ada data ulasan.</div>";
+    // Navbar greeting sesuai status login
+    const username = localStorage.getItem('username');
+    let authButtons = '';
+    if (username) {
+      authButtons = `<span class="greeting">Hi, ${username} apa kabar?</span>`;
+    } else {
+      authButtons = `
+        <button id="register-btn" class="register-btn">Daftar</button>
+        <button id="login-btn" class="login-btn">Masuk</button>
+      `;
+    }
     // Info
     app.innerHTML = `
       <nav class="navbar detail-navbar">
@@ -33,8 +44,7 @@ export async function renderDeskripsiPage(appId) {
           <li>Tentang</li>
         </ul>
         <div class="auth-buttons">
-            <button id="register-btn" class="register-btn">Daftar</button>
-            <button id="login-btn" class="login-btn">Masuk</button>
+            ${authButtons}
         </div>
       </nav>
       <div class="detail-container">

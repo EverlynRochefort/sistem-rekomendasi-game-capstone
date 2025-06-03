@@ -6,13 +6,13 @@ export function LoginPage() {
             <div class="login-form">
                 <h1 class="signin-title">Sign In</h1>
                 
-                <form>
+                <form id="loginForm">
                     <div class="form-group">
-                        <input type="text" class="form-input" placeholder="example@gmail.com">
+                        <input id="loginEmail" type="text" class="form-input" placeholder="example@gmail.com">
                     </div>
                     
                     <div class="form-group">
-                        <input type="password" class="form-input" placeholder="••••••••">
+                        <input id="loginPassword" type="password" class="form-input" placeholder="••••••••">
                     </div>
                     
                     <button type="submit" class="signin-btn">Sign In</button>
@@ -33,7 +33,7 @@ export function LoginPage() {
             <p class="welcome-text">
                 Welcome back! We are so happy to have you here. It's great to see you again. We hope you had a safe and enjoyable time away.
             </p>
-            <p class="signup-text">No account yet? <a href="/register">Signup.</a></p>
+            <p class="signup-text">No account yet? <a href="#/register">Signup.</a></p>
         </div>
     </div>
     `;

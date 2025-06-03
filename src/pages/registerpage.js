@@ -6,23 +6,20 @@ export function RegisterPage() {
         <div class="register-form">
             <h1 class="register-title">Join With Us</h1>
 
-            <form>
+            <form id="registerForm">
                 <div class="form-group">
-                    <input type="text" class="form-input" placeholder="Your Name">
+                    <input id="username" type="text" class="form-input" placeholder="Your Name">
                 </div>
-
                 <div class="form-group">
-                    <input type="text" class="form-input" placeholder="example@gmail.com">
+                    <input id="email" type="text" class="form-input" placeholder="example@gmail.com">
                 </div>
-
                 <div class="form-group">
-                    <input type="password" class="form-input" placeholder="••••••••">
+                    <input id="password" type="password" class="form-input" placeholder="••••••••">
                 </div>
-
                 <div class="form-group">
-                    <input type="password" class="form-input" placeholder="Confirm Password">
+                    <input id="confirmPassword" type="password" class="form-input" placeholder="Confirm Password">
                 </div>
-
+                <div id="errorMessage" style="color:red;"></div>
                 <button type="submit" class="register-btn-in">Sign Up</button>
             </form>
 
@@ -41,7 +38,7 @@ export function RegisterPage() {
         <p class="welcome-text">
             Create an account to connect with others! We're excited to have you join us. Sign up today and become a part of our growing community.
         </p>
-        <p class="signin-text">Already have an account? Sign in.</p>
+        <p class="signin-text">Already have an account? <a href="#/login">Sign in.</a></p>
     </div>
 </div>
   `;

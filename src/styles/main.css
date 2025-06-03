@@ -662,6 +662,9 @@ main {
 
 /* agar user tau dimana page dia berada */
 .nav-links li:first-child {
-    text-decoration: underline;
-    
+    text-decoration: underline;   
+}
+
+.greeting {
+    font-weight: bold;
 }

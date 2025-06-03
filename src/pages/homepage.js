@@ -4,14 +4,17 @@ import "../styles/register.css";
 import { LoginPage } from "./loginpage";
 import { RegisterPage } from "./registerpage"; 
 import { getRecommendedGames, getTrendingGames, searchGames } from "../api";
+import { attachRegisterHandler, attachLoginHandler } from "../database/registerScript";
 
 // Routing handler
 export function handleRouting() {
   const app = document.getElementById("app");
   if (window.location.hash === "#/login") {
     app.innerHTML = LoginPage();
+    attachLoginHandler();
   } else if (window.location.hash === "#/register") {
     app.innerHTML = RegisterPage(); // add the register page
+    attachRegisterHandler();
   } else if (window.location.hash.startsWith("#/detail/")) {
     const appId = window.location.hash.split("#/detail/")[1];
     import("./dekripsipage.js").then(module => {
@@ -48,6 +51,17 @@ function createGameCard(game) {
 
 async function render() {
   const app = document.getElementById("app");
+  const username = localStorage.getItem('username');
+  let authButtons = '';
+  if (username) {
+    authButtons = `<span class="greeting">Hi, ${username} apa kabar?</span>`;
+  } else {
+    authButtons = `
+      <button id="register-btn" class="register-btn">Daftar</button>
+      <button id="login-btn" class="login-btn">Masuk</button>
+    `;
+  }
+
   app.innerHTML = `
     <nav class="navbar">
         <div class="logo">
@@ -62,8 +76,7 @@ async function render() {
             <li>Blog</li>
         </ul>
         <div class="auth-buttons">
-            <button id="register-btn" class="register-btn">Daftar</button>
-            <button id="login-btn" class="login-btn">Masuk</button>
+            ${authButtons}
         </div>
     </nav>
 
@@ -123,7 +136,7 @@ async function render() {
         <section class="signup-banner">
             <h2>Dapatkan Rekomendasi yang Lebih Personal</h2>
             <p>Buat akun untuk mendapatkan rekomendasi game yang disesuaikan dengan preferensi dan riwayat bermain Anda.</p>
-            <button id="signup-btn" class="signup-btn">Buat Akun</button>
+            <button id="signup-btn" class="signup-btn">Yuk Mulai!</button>
             <a href="#" class="learn-more">Pelajari Lebih Lanjut</a>
         </section>
     </main>
@@ -255,14 +268,20 @@ async function render() {
       searchResultsSection.style.display = "block";
       recommendSection.style.display = "none";
       trendingSection.style.display = "none";
-      
+      searchResultsSection.querySelector("h2").textContent = "Menampilkan Hasil Game Yang Dicari";
       const searchResults = document.getElementById("search-results");
       searchResults.innerHTML = '<div class="loading">Mencari game...</div>';
-      
       try {
         const results = await searchGames(query);
         if (results.length > 0) {
           searchResults.innerHTML = results.map(game => createGameCard(game)).join("");
+          // Event Listener untuk button detail game diluar ID populer
+          searchResults.querySelectorAll(".detail-btn").forEach((button) => {
+            button.addEventListener("click", (e) => {
+              const appId = e.target.dataset.appid;
+              window.location.hash = `#/detail/${appId}`;
+            });
+          });
         } else {
           searchResults.innerHTML = '<div class="no-results">Game yang kamu cari ga ada nih :(</div>';
         }
