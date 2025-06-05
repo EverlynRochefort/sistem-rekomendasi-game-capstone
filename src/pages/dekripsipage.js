@@ -1,6 +1,7 @@
 import "../styles/deskripsi.css";
 import "../styles/main.css";
-import { fetchGameDetails } from "../api";
+import { fetchGameDetails, getSimilarGames } from "../api";
+import { createGameCard } from "./components";
 
 export async function renderDeskripsiPage(appId) {
   const app = document.getElementById("app");
@@ -25,7 +26,10 @@ export async function renderDeskripsiPage(appId) {
     const username = localStorage.getItem('username');
     let authButtons = '';
     if (username) {
-      authButtons = `<span class="greeting">Hi, ${username} apa kabar?</span>`;
+      authButtons = `
+        <span class="greeting">Hi, ${username} apa kabar?</span>
+        <button id="logout-btn" class="logout-btn">Logout</button>
+      `;
     } else {
       authButtons = `
         <button id="register-btn" class="register-btn">Daftar</button>
@@ -252,6 +256,38 @@ export async function renderDeskripsiPage(appId) {
       registerBtn.addEventListener("click", () => {
         window.location.hash = "#/register";
       });
+    }
+    const logoutBtn = document.getElementById("logout-btn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("username");
+        window.location.hash = "#/";
+      });
+    }
+
+    // Load similar games
+    try {
+      const similarGames = await getSimilarGames(appId);
+      const similarList = document.getElementById("similar-list");
+      if (similarGames.length > 0) {
+        similarList.innerHTML = similarGames
+          .map((game) => createGameCard(game))
+          .join("");
+        
+        // Add event listeners to the detail buttons
+        similarList.querySelectorAll(".detail-btn").forEach((button) => {
+          button.addEventListener("click", (e) => {
+            const appId = e.target.dataset.appid;
+            window.location.hash = `#/detail/${appId}`;
+          });
+        });
+      } else {
+        similarList.innerHTML = '<div class="no-results">Tidak ada game serupa yang ditemukan.</div>';
+      }
+    } catch (error) {
+      console.error("Error loading similar games:", error);
+      document.getElementById("similar-list").innerHTML =
+        '<div class="error">Error loading similar games</div>';
     }
   } catch (e) {
     app.innerHTML = `<div class='error'>Gagal memuat data game.</div>`;

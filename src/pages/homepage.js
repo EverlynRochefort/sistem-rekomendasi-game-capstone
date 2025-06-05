@@ -5,6 +5,7 @@ import { LoginPage } from "./loginpage";
 import { RegisterPage } from "./registerpage"; 
 import { getRecommendedGames, getTrendingGames, searchGames } from "../api";
 import { attachRegisterHandler, attachLoginHandler } from "../database/registerScript";
+import { createGameCard } from "./components";
 
 // Routing handler
 export function handleRouting() {
@@ -28,33 +29,13 @@ export function handleRouting() {
 window.addEventListener("hashchange", handleRouting);
 document.addEventListener("DOMContentLoaded", handleRouting);
 
-function createGameCard(game) {
-  const posterUrl = `https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/header.jpg`;
-  return `
-    <div class="game-card">
-        <img class="game-poster" src="${posterUrl}" alt="${
-    game.title
-  } poster" />
-        <h3>${game.title}</h3>
-        <div class="game-genres">
-            ${game.genres
-              .map((genre) => `<span class="genre-badge">${genre}</span>`)
-              .join("")}
-        </div>
-        <p class="game-description">${game.description}</p>
-        <button class="detail-btn" data-appid="${
-          game.appid
-        }">Lihat Detail</button>
-    </div>
-    `;
-}
-
 async function render() {
   const app = document.getElementById("app");
   const username = localStorage.getItem('username');
   let authButtons = '';
   if (username) {
-    authButtons = `<span class="greeting">Hi, ${username} apa kabar?</span>`;
+    authButtons = `<span class="greeting">Hi, ${username} apa kabar?</span>
+    <button id="logout-btn" class="logout-btn">Logout</button>`;
   } else {
     authButtons = `
       <button id="register-btn" class="register-btn">Daftar</button>
@@ -302,4 +283,13 @@ async function render() {
       handleSearch();
     }
   });
+
+  const logoutBtn = document.getElementById("logout-btn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("username");
+      window.location.hash = "#/";
+      render();
+    });
+  }
 }

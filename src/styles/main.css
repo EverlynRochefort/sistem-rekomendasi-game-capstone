@@ -77,7 +77,8 @@ body {
 
 .auth-buttons {
     display: flex;
-    gap: 15px;
+    align-items: center;
+    gap: 10px;
 }
 
 .register-btn {
@@ -667,4 +668,17 @@ main {
 
 .greeting {
     font-weight: bold;
+}
+
+/*button logout*/
+.logout-btn {
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 0.95rem;
+    margin-left: 10px;
+    padding: 8px 20px;
 }

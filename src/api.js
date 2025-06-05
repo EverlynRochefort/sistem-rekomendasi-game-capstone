@@ -113,4 +113,79 @@ export async function searchGames(query) {
         return [];
     }
 }
+
+export async function getSimilarGames(appId) {
+    try {
+        // Get the current game details first
+        const currentGame = await fetchGameDetails(appId);
+        if (!currentGame.success) {
+            console.error('Current game detail error:', currentGame);
+            return [];
+        }
+        const currentName = currentGame.data.name;
+        // Ambil kata kunci utama dari judul (misal: kata pertama, atau kata unik sebelum angka/kolon)
+        let keyword = currentName.split(/:| |-/)[0];
+        if (keyword.length < 3 && currentName.split(' ').length > 1) {
+            // Jika kata pertama terlalu pendek, ambil dua kata pertama
+            keyword = currentName.split(' ').slice(0,2).join(' ');
+        }
+        // 1. Cari berdasarkan nama
+        const searchUrl = `http://localhost:3001/api/search?query=${encodeURIComponent(keyword)}`;
+        let response = await fetch(searchUrl);
+        let appids = await response.json();
+        // Hilangkan appId yang sedang dilihat
+        appids = appids.filter(id => id != appId);
+        let details = await Promise.all(
+            appids.map(async (id) => {
+                const detail = await fetchGameDetails(id);
+                if (detail.success) {
+                    return {
+                        title: detail.data.name,
+                        description: detail.data.short_description,
+                        genres: detail.data.genres ? detail.data.genres.map(g => g.description) : [],
+                        appid: id
+                    };
+                }
+                return null;
+            })
+        );
+        details = details.filter(game => game !== null);
+        // Jika hasil pencarian nama cukup (>=2), pakai hasil ini
+        if (details.length >= 2) {
+            return details.slice(0, 4);
+        }
+        // 2. Jika tidak, fallback ke genre
+        const currentGenres = currentGame.data.genres ? currentGame.data.genres.map(g => g.description) : [];
+        const gameDetails = await Promise.all(
+            popularAppIds.map(async (id) => {
+                if (id === parseInt(appId)) return null;
+                const detail = await fetchGameDetails(id);
+                if (detail.success) {
+                    return {
+                        title: detail.data.name,
+                        description: detail.data.short_description,
+                        genres: detail.data.genres ? detail.data.genres.map(g => g.description) : [],
+                        appid: id
+                    };
+                }
+                return null;
+            })
+        );
+        const allGames = gameDetails.filter(game => game !== null);
+        const similarGames = allGames.filter(game => {
+            const matchingGenres = game.genres.filter(genre => currentGenres.includes(genre));
+            return matchingGenres.length > 0;
+        });
+        return similarGames
+            .sort((a, b) => {
+                const aMatches = a.genres.filter(genre => currentGenres.includes(genre)).length;
+                const bMatches = b.genres.filter(genre => currentGenres.includes(genre)).length;
+                return bMatches - aMatches;
+            })
+            .slice(0, 4);
+    } catch (error) {
+        console.error('Error fetching similar games:', error);
+        return [];
+    }
+}
     
