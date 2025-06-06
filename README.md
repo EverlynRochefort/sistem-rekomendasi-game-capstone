@@ -20,4 +20,4 @@ fitur keseluruhan :
 - fitur search-bar untuk mencari semua data game yang ada di steam (done)
 - fitur similiar game ketika melihat deskripsi game (deskripsi outlast maka keluar outlast 2 dan seterusnya yang berkaitan) (done)
 - button logout untuk ke homepage versi sebelum login. (done)
-- fitur rekomendasi game dari machine learning berdasarkan beberapa input atau menuliskan deskripsi (done)
+- fitur rekomendasi game dari machine learning berdasarkan beberapa input atau menuliskan deskripsi (coming soon)
