@@ -265,6 +265,27 @@ export async function renderDeskripsiPage(appId) {
       });
     }
 
+    // Event untuk button Tambah ke Koleksi
+    const koleksiBtn = document.querySelector(".koleksi-btn");
+    if (koleksiBtn) {
+      koleksiBtn.addEventListener("click", () => {
+        const username = localStorage.getItem("username");
+        if (!username) {
+          alert("Silakan login untuk menambah koleksi.");
+          return;
+        }
+        const koleksiKey = `koleksi_${username}`;
+        let koleksi = JSON.parse(localStorage.getItem(koleksiKey) || "[]");
+        if (!koleksi.includes(appId)) {
+          koleksi.push(appId);
+          localStorage.setItem(koleksiKey, JSON.stringify(koleksi));
+          alert("Game berhasil ditambahkan ke koleksi!");
+        } else {
+          alert("Game sudah ada di koleksi Anda.");
+        }
+      });
+    }
+
     // Load similar games
     try {
       const similarGames = await getSimilarGames(appId);
@@ -288,6 +309,14 @@ export async function renderDeskripsiPage(appId) {
       console.error("Error loading similar games:", error);
       document.getElementById("similar-list").innerHTML =
         '<div class="error">Error loading similar games</div>';
+    }
+
+    // Event listener untuk navigasi Koleksi di navbar
+    const navKoleksi = document.querySelector(".nav-links li:nth-child(3)");
+    if (navKoleksi) {
+      navKoleksi.addEventListener("click", () => {
+        window.location.hash = "#/koleksi";
+      });
     }
   } catch (e) {
     app.innerHTML = `<div class='error'>Gagal memuat data game.</div>`;

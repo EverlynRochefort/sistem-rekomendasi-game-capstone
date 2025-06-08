@@ -21,6 +21,10 @@ export function handleRouting() {
     import("./dekripsipage.js").then(module => {
       module.renderDeskripsiPage(appId);
     });
+  } else if (window.location.hash === "#/koleksi") {
+    import("./koleksiPage.js").then(module => {
+      module.renderKoleksiPage();
+    });
   } else {
     render();
   }
@@ -50,10 +54,10 @@ async function render() {
             GameMatch
         </div>
         <ul class="nav-links">
-            <li>Beranda</li>
-            <li>Eksplorasi</li>
-            <li>Koleksi</li>
-            <li>Tentang Kami</li>
+            <li id="nav-beranda">Beranda</li>
+            <li id="nav-eksplorasi">Eksplorasi</li>
+            <li id="nav-koleksi">Koleksi</li>
+            <li id="nav-tentang">Tentang Kami</li>
             <li>Blog</li>
         </ul>
         <div class="auth-buttons">
@@ -290,6 +294,14 @@ async function render() {
       localStorage.removeItem("username");
       window.location.hash = "#/";
       render();
+    });
+  }
+
+  // Tambahkan event listener untuk navigasi Koleksi
+  const navKoleksi = document.getElementById("nav-koleksi");
+  if (navKoleksi) {
+    navKoleksi.addEventListener("click", () => {
+      window.location.hash = "#/koleksi";
     });
   }
 }
