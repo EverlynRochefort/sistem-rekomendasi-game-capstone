@@ -1,11 +1,19 @@
 import "../styles/main.css";
 import "../styles/login.css";
-import "../styles/register.css"; 
-import { LoginPage } from "./loginpage";
-import { RegisterPage } from "./registerpage"; 
+import "../styles/register.css";
+
+/* change dir to pages/auth */
+import { LoginPage } from "./auth/loginpage.js";
+import { RegisterPage } from "./auth/registerpage.js";
+
 import { getRecommendedGames, getTrendingGames, searchGames } from "../api";
-import { attachRegisterHandler, attachLoginHandler } from "../database/registerScript";
-import { createGameCard } from "./components";
+import {
+  attachRegisterHandler,
+  attachLoginHandler,
+} from "../database/registerScript";
+
+/* use init to get the component rather than manually importing 1by1 */
+import { createGameCard, Navbar, Footer } from "../components/index.js";
 
 // Routing handler
 export function handleRouting() {
@@ -18,11 +26,11 @@ export function handleRouting() {
     attachRegisterHandler();
   } else if (window.location.hash.startsWith("#/detail/")) {
     const appId = window.location.hash.split("#/detail/")[1];
-    import("./dekripsipage.js").then(module => {
+    import("./dekripsipage.js").then((module) => {
       module.renderDeskripsiPage(appId);
     });
   } else if (window.location.hash === "#/koleksi") {
-    import("./koleksiPage.js").then(module => {
+    import("./koleksiPage.js").then((module) => {
       module.renderKoleksiPage();
     });
   } else {
@@ -35,8 +43,8 @@ document.addEventListener("DOMContentLoaded", handleRouting);
 
 async function render() {
   const app = document.getElementById("app");
-  const username = localStorage.getItem('username');
-  let authButtons = '';
+  const username = localStorage.getItem("username");
+  let authButtons = "";
   if (username) {
     authButtons = `<span class="greeting">Hi, ${username} apa kabar?</span>
     <button id="logout-btn" class="logout-btn">Logout</button>`;
@@ -47,23 +55,9 @@ async function render() {
     `;
   }
 
+  /* use component for navbar and footer */
   app.innerHTML = `
-    <nav class="navbar">
-        <div class="logo">
-            <span class="logo-icon">🎮</span>
-            GameMatch
-        </div>
-        <ul class="nav-links">
-            <li id="nav-beranda">Beranda</li>
-            <li id="nav-eksplorasi">Eksplorasi</li>
-            <li id="nav-koleksi">Koleksi</li>
-            <li id="nav-tentang">Tentang Kami</li>
-            <li>Blog</li>
-        </ul>
-        <div class="auth-buttons">
-            ${authButtons}
-        </div>
-    </nav>
+    ${Navbar(username)}
 
     <section class="hero">
         <h1>Temukan Game Terbaik untuk Anda</h1>
@@ -126,58 +120,7 @@ async function render() {
         </section>
     </main>
 
-    <footer class="footer">
-        <div class="footer-columns">
-            <div class="footer-col">
-                <div class="footer-logo">
-                    <span>🎮</span>
-                    GameMatch
-                </div>
-                <p>Temukan game terbaik yang sesuai dengan selera Anda melalui sistem rekomendasi game pintar kami.</p>
-            </div>
-            
-            <div class="footer-col">
-                <h3>Navigasi</h3>
-                <ul>
-                    <li>Beranda</li>
-                    <li>Eksplorasi</li>
-                    <li>Koleksi</li>
-                    <li>Tentang Kami</li>
-                    <li>Blog</li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h3>Genre</h3>
-                <ul>
-                    <li>Action</li>
-                    <li>Adventure</li>
-                    <li>RPG</li>
-                    <li>Strategy</li>
-                    <li>Sports</li>
-                    <li>Simulation</li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h3>Hubungi Kami</h3>
-                <ul>
-                    <li>info@gamematch.com</li>
-                    <li>+62 123 4567 890</li>
-                </ul>
-                
-                <h3 class="subscribe-title">Berlangganan</h3>
-                <div class="subscribe-form">
-                    <input type="email" placeholder="Email Anda" />
-                    <button class="subscribe-btn">Kirim</button>
-                </div>
-            </div>
-        </div>
-        
-        <div class="copyright">
-            © 2023 GameMatch. Semua hak dilindungi.
-        </div>
-    </footer>
+    ${Footer()}
     `;
 
   // Add event listener ke login page
@@ -243,7 +186,9 @@ async function render() {
   // Action untuk fitur search
   const searchInput = document.getElementById("search-input");
   const searchBtn = document.getElementById("search-btn");
-  const searchResultsSection = document.querySelector(".search-results-section");
+  const searchResultsSection = document.querySelector(
+    ".search-results-section"
+  );
   const recommendSection = document.querySelector(".recommend-section");
   const trendingSection = document.querySelector(".trending-section");
 
@@ -253,13 +198,16 @@ async function render() {
       searchResultsSection.style.display = "block";
       recommendSection.style.display = "none";
       trendingSection.style.display = "none";
-      searchResultsSection.querySelector("h2").textContent = "Menampilkan Hasil Game Yang Dicari";
+      searchResultsSection.querySelector("h2").textContent =
+        "Menampilkan Hasil Game Yang Dicari";
       const searchResults = document.getElementById("search-results");
       searchResults.innerHTML = '<div class="loading">Mencari game...</div>';
       try {
         const results = await searchGames(query);
         if (results.length > 0) {
-          searchResults.innerHTML = results.map(game => createGameCard(game)).join("");
+          searchResults.innerHTML = results
+            .map((game) => createGameCard(game))
+            .join("");
           // Event Listener untuk button detail game diluar ID populer
           searchResults.querySelectorAll(".detail-btn").forEach((button) => {
             button.addEventListener("click", (e) => {
@@ -268,11 +216,13 @@ async function render() {
             });
           });
         } else {
-          searchResults.innerHTML = '<div class="no-results">Game yang kamu cari ga ada nih :(</div>';
+          searchResults.innerHTML =
+            '<div class="no-results">Game yang kamu cari ga ada nih :(</div>';
         }
       } catch (error) {
         console.error("Error searching games:", error);
-        searchResults.innerHTML = '<div class="error">Error saat mencari game</div>';
+        searchResults.innerHTML =
+          '<div class="error">Error saat mencari game</div>';
       }
     } else {
       searchResultsSection.style.display = "none";

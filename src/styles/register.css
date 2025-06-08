@@ -60,7 +60,7 @@ body {
 
 .form-input::placeholder {
   color: #999;
-  padding: 30px;
+  padding: 0px; /* fix the alignment for the placeholder */
 }
 
 .register-btn-in {
