@@ -7,6 +7,7 @@ Jalankan dashboard (3 terminal di vs code) :
 -   cd src/database
   node server.js
 - open xampp start mysql dan apache
+- jika gagal login, npm install bcrypt@6.0.0
 
 
 Update untuk fitur search-bar
@@ -20,6 +21,6 @@ fitur keseluruhan :
 - fitur search-bar untuk mencari semua data game yang ada di steam (done)
 - fitur similiar game ketika melihat deskripsi game (deskripsi outlast maka keluar outlast 2 dan seterusnya yang berkaitan) (done)
 - button logout untuk ke homepage versi sebelum login. (done)
-- koleksi page ketika user menyimpan data game yang diinginkan (coming soon)
+- koleksi page ketika user menyimpan data game yang diinginkan (done)
 - fitur rekomendasi game dari machine learning berdasarkan beberapa input atau menuliskan deskripsi (coming soon)
 - evaluasi UI secara keseluruhan (coming soon)
