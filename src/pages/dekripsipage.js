@@ -1,7 +1,7 @@
 import "../styles/deskripsi.css";
 import "../styles/main.css";
 import { fetchGameDetails, getSimilarGames } from "../api";
-import { createGameCard } from "./components";
+import { createGameCard, Navbar, Footer } from "../components/index";
 
 export async function renderDeskripsiPage(appId) {
   const app = document.getElementById("app");
@@ -11,20 +11,47 @@ export async function renderDeskripsiPage(appId) {
     if (!detail.success) throw new Error("Data tidak ditemukan");
     const data = detail.data;
     // Genre
-    const genres = data.genres ? data.genres.map(g => `<span class='genre-badge'>${g.description}</span>`).join("") : "";
+    const genres = data.genres
+      ? data.genres
+          .map((g) => `<span class='genre-badge'>${g.description}</span>`)
+          .join("")
+      : "";
     // Platform
-    const platforms = data.platforms ? Object.keys(data.platforms).filter(p => data.platforms[p]).map(p => `<span class='platform-badge'>${p}</span>`).join("") : "";
+    const platforms = data.platforms
+      ? Object.keys(data.platforms)
+          .filter((p) => data.platforms[p])
+          .map((p) => `<span class='platform-badge'>${p}</span>`)
+          .join("")
+      : "";
     // Screenshot
-    const screenshots = data.screenshots ? data.screenshots.map((s, i) => `<img src='${s.path_full}' class='ss-img' data-ss-idx='${i}'/>`).join("") : "<div style='color:#b8c1ec'>Tidak ada screenshot.</div>";
+    const screenshots = data.screenshots
+      ? data.screenshots
+          .map(
+            (s, i) =>
+              `<img src='${s.path_full}' class='ss-img' data-ss-idx='${i}'/>`
+          )
+          .join("")
+      : "<div style='color:#b8c1ec'>Tidak ada screenshot.</div>";
     // Fitur utama (contoh)
-    const features = data.categories ? data.categories.slice(0,4).map(f => `<li><span class='checkmark'>✔</span> ${f.description}</li>`).join("") : "";
+    const features = data.categories
+      ? data.categories
+          .slice(0, 4)
+          .map(
+            (f) => `<li><span class='checkmark'>✔</span> ${f.description}</li>`
+          )
+          .join("")
+      : "";
     // System requirements
-    const sysreq = data.pc_requirements ? (data.pc_requirements.recommended || data.pc_requirements.minimum || "-") : "-";
+    const sysreq = data.pc_requirements
+      ? data.pc_requirements.recommended || data.pc_requirements.minimum || "-"
+      : "-";
     // Ulasan
-    const reviews = data.recommendations ? `<div class='review-box'><b>Total Review:</b> ${data.recommendations.total.toLocaleString()}</div>` : "<div class='review-box'>Tidak ada data ulasan.</div>";
+    const reviews = data.recommendations
+      ? `<div class='review-box'><b>Total Review:</b> ${data.recommendations.total.toLocaleString()}</div>`
+      : "<div class='review-box'>Tidak ada data ulasan.</div>";
     // Navbar greeting sesuai status login
-    const username = localStorage.getItem('username');
-    let authButtons = '';
+    const username = localStorage.getItem("username");
+    let authButtons = "";
     if (username) {
       authButtons = `
         <span class="greeting">Hi, ${username} apa kabar?</span>
@@ -38,19 +65,8 @@ export async function renderDeskripsiPage(appId) {
     }
     // Info
     app.innerHTML = `
-      <nav class="navbar detail-navbar">
-        <div class="logo"><span class="logo-icon">🎮</span> GameMatch</div>
-        <ul class="nav-links">
-          <li onclick="window.location.hash=''">Beranda</li>
-          <li>Eksplorasi</li>
-          <li>Koleksi</li>
-          <li>Tentang</li>
-          <li>Tentang</li>
-        </ul>
-        <div class="auth-buttons">
-            ${authButtons}
-        </div>
-      </nav>
+      ${Navbar(username)}      
+    
       <div class="detail-container">
         <div class="detail-header">
           <img class="detail-cover" src="https://cdn.cloudflare.steamstatic.com/steam/apps/${appId}/header.jpg"/>
@@ -58,11 +74,17 @@ export async function renderDeskripsiPage(appId) {
             <h1>${data.name}</h1>
             <div class="genre-list">${genres}</div>
             <div class="rating-match">
-              <span class="star">★</span> <span class="rating">${data.metacritic ? data.metacritic.score/10 : "-"}/10</span>
-              <span class="match">${Math.floor(Math.random()*10+85)}% Match</span>
+              <span class="star">★</span> <span class="rating">${
+                data.metacritic ? data.metacritic.score / 10 : "-"
+              }/10</span>
+              <span class="match">${Math.floor(
+                Math.random() * 10 + 85
+              )}% Match</span>
             </div>
             <div class="detail-actions">
-              <a href="${data.website || `https://store.steampowered.com/app/${appId}` }" target="_blank" class="trailer-btn">Tonton Trailer</a>
+              <a href="${
+                data.website || `https://store.steampowered.com/app/${appId}`
+              }" target="_blank" class="trailer-btn">Tonton Trailer</a>
               <button class="koleksi-btn">+ Tambah ke Koleksi</button>
               <button class="share-btn">Bagikan</button>
             </div>
@@ -82,12 +104,24 @@ export async function renderDeskripsiPage(appId) {
             <p>${data.short_description || ""}</p>
             <div class="info-box">
               <h3>Informasi</h3>
-              <div><b>Pengembang:</b> ${data.developers ? data.developers.join(", ") : "-"}</div>
-              <div><b>Penerbit:</b> ${data.publishers ? data.publishers.join(", ") : "-"}</div>
-              <div><b>Tanggal Rilis:</b> ${data.release_date ? data.release_date.date : "-"}</div>
+              <div><b>Pengembang:</b> ${
+                data.developers ? data.developers.join(", ") : "-"
+              }</div>
+              <div><b>Penerbit:</b> ${
+                data.publishers ? data.publishers.join(", ") : "-"
+              }</div>
+              <div><b>Tanggal Rilis:</b> ${
+                data.release_date ? data.release_date.date : "-"
+              }</div>
               <div><b>Platform:</b> ${platforms}</div>
-              <div><b>Mode:</b> ${data.categories && data.categories.some(c=>c.id===2) ? "Single-player" : "Multi-player"}</div>
-              <div><b>Rating Usia:</b> ${data.required_age ? `PEGI ${data.required_age}` : "-"}</div>
+              <div><b>Mode:</b> ${
+                data.categories && data.categories.some((c) => c.id === 2)
+                  ? "Single-player"
+                  : "Multi-player"
+              }</div>
+              <div><b>Rating Usia:</b> ${
+                data.required_age ? `PEGI ${data.required_age}` : "-"
+              }</div>
             </div>
           </div>
           <div class="feature-section">
@@ -109,81 +143,42 @@ export async function renderDeskripsiPage(appId) {
         </div>
       </section>
 
-      <footer class="footer">
-        <div class="footer-columns">
-            <div class="footer-col">
-                <div class="footer-logo">
-                    <span>🎮</span>
-                    GameMatch
-                </div>
-                <p>Temukan game terbaik yang sesuai dengan selera Anda melalui sistem rekomendasi game pintar kami.</p>
-            </div>
-            
-            <div class="footer-col">
-                <h3>Navigasi</h3>
-                <ul>
-                    <li>Beranda</li>
-                    <li>Eksplorasi</li>
-                    <li>Koleksi</li>
-                    <li>Tentang Kami</li>
-                    <li>Blog</li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h3>Genre</h3>
-                <ul>
-                    <li>Action</li>
-                    <li>Adventure</li>
-                    <li>RPG</li>
-                    <li>Strategy</li>
-                    <li>Sports</li>
-                    <li>Simulation</li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h3>Hubungi Kami</h3>
-                <ul>
-                    <li>info@gamematch.com</li>
-                    <li>+62 123 4567 890</li>
-                </ul>
-                
-                <h3 class="subscribe-title">Berlangganan</h3>
-                <div class="subscribe-form">
-                    <input type="email" placeholder="Email Anda" />
-                    <button class="subscribe-btn">Kirim</button>
-                </div>
-            </div>
-        </div>
-        
-        <div class="copyright">
-            © 2023 GameMatch. Semua hak dilindungi.
-        </div>
-    </footer>
+      ${Footer()}
     `;
 
     // 5 Tab logic
     const tabContent = document.getElementById("tab-content");
     const tabBtns = document.querySelectorAll(".tab-btn");
-    tabBtns.forEach(btn => {
-      btn.addEventListener("click", function() {
-        tabBtns.forEach(b => b.classList.remove("active"));
+    tabBtns.forEach((btn) => {
+      btn.addEventListener("click", function () {
+        tabBtns.forEach((b) => b.classList.remove("active"));
         this.classList.add("active");
         const tab = this.getAttribute("data-tab");
-        if(tab === "ikhtisar") {
+        if (tab === "ikhtisar") {
           tabContent.innerHTML = `
             <div class='overview-section'>
               <h2>Tentang Game</h2>
               <p>${data.short_description || ""}</p>
               <div class='info-box'>
                 <h3>Informasi</h3>
-                <div><b>Pengembang:</b> ${data.developers ? data.developers.join(", ") : "-"}</div>
-                <div><b>Penerbit:</b> ${data.publishers ? data.publishers.join(", ") : "-"}</div>
-                <div><b>Tanggal Rilis:</b> ${data.release_date ? data.release_date.date : "-"}</div>
+                <div><b>Pengembang:</b> ${
+                  data.developers ? data.developers.join(", ") : "-"
+                }</div>
+                <div><b>Penerbit:</b> ${
+                  data.publishers ? data.publishers.join(", ") : "-"
+                }</div>
+                <div><b>Tanggal Rilis:</b> ${
+                  data.release_date ? data.release_date.date : "-"
+                }</div>
                 <div><b>Platform:</b> ${platforms}</div>
-                <div><b>Mode:</b> ${data.categories && data.categories.some(c=>c.id===2) ? "Single-player" : "Multi-player"}</div>
-                <div><b>Rating Usia:</b> ${data.required_age ? `PEGI ${data.required_age}` : "-"}</div>
+                <div><b>Mode:</b> ${
+                  data.categories && data.categories.some((c) => c.id === 2)
+                    ? "Single-player"
+                    : "Multi-player"
+                }</div>
+                <div><b>Rating Usia:</b> ${
+                  data.required_age ? `PEGI ${data.required_age}` : "-"
+                }</div>
               </div>
             </div>
             <div class='feature-section'>
@@ -191,7 +186,7 @@ export async function renderDeskripsiPage(appId) {
               <ul>${features}</ul>
             </div>
           `;
-        } else if(tab === "screenshot") {
+        } else if (tab === "screenshot") {
           tabContent.innerHTML = `
             <div class='screenshot-section' style='width:100%'>
               <h3>Screenshot</h3>
@@ -199,21 +194,21 @@ export async function renderDeskripsiPage(appId) {
             </div>
           `;
           setupLightbox();
-        } else if(tab === "system") {
+        } else if (tab === "system") {
           tabContent.innerHTML = `
             <div class='sysreq-section'>
               <h3>Persyaratan Sistem</h3>
               <div class='sysreq-box'>${sysreq}</div>
             </div>
           `;
-        } else if(tab === "ulasan") {
+        } else if (tab === "ulasan") {
           tabContent.innerHTML = `
             <div class='review-section'>
               <h3>Ulasan</h3>
               ${reviews}
             </div>
           `;
-        } else if(tab === "dlc") {
+        } else if (tab === "dlc") {
           tabContent.innerHTML = `<div class='dlc-section'><h3>DLC & Konten</h3><div style='color:#b8c1ec'>Belum tersedia.</div></div>`;
         }
       });
@@ -221,24 +216,24 @@ export async function renderDeskripsiPage(appId) {
 
     // Lightbox logic
     function setupLightbox() {
-      const imgs = document.querySelectorAll('.ss-img');
-      const overlay = document.getElementById('lightbox-overlay');
-      const lightboxImg = document.getElementById('lightbox-img');
-      const closeBtn = document.querySelector('.lightbox-close');
-      imgs.forEach(img => {
-        img.addEventListener('click', function() {
+      const imgs = document.querySelectorAll(".ss-img");
+      const overlay = document.getElementById("lightbox-overlay");
+      const lightboxImg = document.getElementById("lightbox-img");
+      const closeBtn = document.querySelector(".lightbox-close");
+      imgs.forEach((img) => {
+        img.addEventListener("click", function () {
           lightboxImg.src = this.src;
-          overlay.style.display = 'flex';
+          overlay.style.display = "flex";
         });
       });
-      closeBtn.addEventListener('click', function() {
-        overlay.style.display = 'none';
-        lightboxImg.src = '';
+      closeBtn.addEventListener("click", function () {
+        overlay.style.display = "none";
+        lightboxImg.src = "";
       });
-      overlay.addEventListener('click', function(e) {
+      overlay.addEventListener("click", function (e) {
         if (e.target === overlay) {
-          overlay.style.display = 'none';
-          lightboxImg.src = '';
+          overlay.style.display = "none";
+          lightboxImg.src = "";
         }
       });
     }
@@ -294,7 +289,7 @@ export async function renderDeskripsiPage(appId) {
         similarList.innerHTML = similarGames
           .map((game) => createGameCard(game))
           .join("");
-        
+
         // Add event listeners to the detail buttons
         similarList.querySelectorAll(".detail-btn").forEach((button) => {
           button.addEventListener("click", (e) => {
@@ -303,7 +298,8 @@ export async function renderDeskripsiPage(appId) {
           });
         });
       } else {
-        similarList.innerHTML = '<div class="no-results">Tidak ada game serupa yang ditemukan.</div>';
+        similarList.innerHTML =
+          '<div class="no-results">Tidak ada game serupa yang ditemukan.</div>';
       }
     } catch (error) {
       console.error("Error loading similar games:", error);
@@ -322,4 +318,3 @@ export async function renderDeskripsiPage(appId) {
     app.innerHTML = `<div class='error'>Gagal memuat data game.</div>`;
   }
 }
-

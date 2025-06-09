@@ -1,1 +1,4 @@
+# remove node_modules
 node_modules
+# .env file located in src/database/
+src/database/.env

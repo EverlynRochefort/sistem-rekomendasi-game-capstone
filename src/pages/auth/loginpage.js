@@ -1,5 +1,5 @@
 export function LoginPage() {
-    return `
+  return `
 <div class="login-container">
         <!-- Left Side - Login Form -->
         <div class="login-form-section">
@@ -8,7 +8,7 @@ export function LoginPage() {
                 
                 <form id="loginForm">
                     <div class="form-group">
-                        <input id="loginEmail" type="text" class="form-input" placeholder="example@gmail.com">
+                        <input id="loginEmail" type="text" class="form-input" placeholder="username">
                     </div>
                     
                     <div class="form-group">
