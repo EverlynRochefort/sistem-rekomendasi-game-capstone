@@ -8,6 +8,7 @@ Jalankan dashboard (3 terminal di vs code) :
 - node src/pages/steam-proxy.js
 - cd src/database
   node server.js
+- uvicorn recccommendation:app --reload
 - buat database: user_account (Workbench, CLI, phpMyAdmin, etc.)
 - open xampp start mysql dan apache
 - jika gagal login, npm install bcrypt@6.0.0
