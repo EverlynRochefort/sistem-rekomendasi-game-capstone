@@ -16,8 +16,17 @@ export async function fetchGameDetails(appId) {
   return gameDetail[appId];
 }
 
-export async function getRecommendedGames() {
+export async function getRecommendedGames(gameName, numberOfRecommendations) {
   try {
+    if (gameName) {
+      const similarGames = await getSimilarGamesByName(gameName);
+      if (similarGames.length > 0) {
+        return similarGames.slice(0, numberOfRecommendations || 5);
+      } else {
+        console.warn("No similar games found by name, falling back to popular games.");
+      }
+    }
+
     const gameDetails = await Promise.all(
       popularAppIds.slice(0, 4).map(async (appid) => {
         const detail = await fetchGameDetails(appid);
@@ -209,6 +218,38 @@ export async function getSimilarGames(appId) {
       .slice(0, 4);
   } catch (error) {
     console.error("Error fetching similar games:", error);
+    return [];
+  }
+}
+
+async function getSimilarGamesByName(gameName) {
+  try {
+    const searchUrl = `http://localhost:3001/api/search?query=${encodeURIComponent(gameName)}`;
+    const response = await fetch(searchUrl);
+    const appids = await response.json();
+
+    if (Array.isArray(appids) && appids.length > 0) {
+      const details = await Promise.all(
+        appids.map(async (id) => {
+          const detail = await fetchGameDetails(id);
+          if (detail.success) {
+            return {
+              title: detail.data.name,
+              description: detail.data.short_description,
+              genres: detail.data.genres
+                ? detail.data.genres.map((g) => g.description)
+                : [],
+              appid: id,
+            };
+          }
+          return null;
+        })
+      );
+      return details.filter((game) => game !== null);
+    }
+    return [];
+  } catch (error) {
+    console.error("Error fetching similar games by name:", error);
     return [];
   }
 }

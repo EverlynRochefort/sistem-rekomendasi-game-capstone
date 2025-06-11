@@ -79,6 +79,10 @@ body {
   color: var(--primary-color);
 }
 
+.nav-links li.active a {
+  text-decoration: underline;
+}
+
 .auth-buttons {
   display: flex;
   align-items: center;

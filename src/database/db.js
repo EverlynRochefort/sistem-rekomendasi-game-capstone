@@ -2,11 +2,11 @@ const mysql = require("mysql2");
 require("dotenv").config();
 
 const db = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: 3306,
+  host: 'games-db.cva6sq4ykuc2.ap-southeast-2.rds.amazonaws.com',
+  user: 'admin',
+  password: 'Ceg49p7ZF!8FU$vwPbf',
+  database: 'games_db',
+  port: 3306,
 });
 
 // Create users table if it doesn't exist

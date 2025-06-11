@@ -11,6 +11,7 @@ import {
   attachRegisterHandler,
   attachLoginHandler,
 } from "../database/registerScript";
+import { attachRekomendasiHandler } from "./rekomendasiPage.js";
 
 /* use init to get the component rather than manually importing 1by1 */
 import { createGameCard, Navbar, Footer } from "../components/index.js";
@@ -32,6 +33,11 @@ export function handleRouting() {
   } else if (window.location.hash === "#/koleksi") {
     import("./koleksiPage.js").then((module) => {
       module.renderKoleksiPage();
+    });
+  } else if (window.location.hash === "#/rekomendasi") {
+    import("./rekomendasiPage.js").then(async (module) => {
+      app.innerHTML = await module.renderRekomendasiPage();
+      module.attachRekomendasiHandler();
     });
   } else {
     render();
@@ -115,7 +121,10 @@ async function render() {
         <section class="signup-banner">
             <h2>Dapatkan Rekomendasi yang Lebih Personal</h2>
             <p>Buat akun untuk mendapatkan rekomendasi game yang disesuaikan dengan preferensi dan riwayat bermain Anda.</p>
-            <button id="signup-btn" class="signup-btn">Yuk Mulai!</button>
+            ${username ? 
+              `<button id="signup-btn" class="signup-btn">Dapatkan Rekomendasi</button>` :
+              `<button id="signup-btn" class="signup-btn">Yuk Mulai!</button>`
+            }
             <a href="#" class="learn-more">Pelajari Lebih Lanjut</a>
         </section>
     </main>
@@ -139,11 +148,22 @@ async function render() {
     });
   }
 
+  const rekomendasiBtn = document.getElementById("rekomendasi-btn");
+  if (rekomendasiBtn) {
+    rekomendasiBtn.addEventListener("click", () => {
+      window.location.hash = "#/rekomendasi";
+    });
+  }
+
   // add event listener ke daftar button di card rekomendasi
   const signUpBtn = document.getElementById("signup-btn");
   if (signUpBtn) {
     signUpBtn.addEventListener("click", () => {
-      window.location.hash = "#/register";
+      if (username) {
+        window.location.hash = "#/rekomendasi";
+      } else {
+        window.location.hash = "#/register";
+      }
     });
   }
 
