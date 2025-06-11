@@ -26,5 +26,6 @@ fitur keseluruhan :
 - fitur similiar game ketika melihat deskripsi game (deskripsi outlast maka keluar outlast 2 dan seterusnya yang berkaitan) (done)
 - button logout untuk ke homepage versi sebelum login. (done)
 - koleksi page ketika user menyimpan data game yang diinginkan (done)
+- UI halaman chatbot (done).
 - fitur rekomendasi game dari machine learning berdasarkan beberapa input atau menuliskan deskripsi (coming soon)
 - evaluasi UI secara keseluruhan (coming soon)

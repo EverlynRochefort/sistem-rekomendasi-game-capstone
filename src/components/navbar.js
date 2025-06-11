@@ -12,15 +12,17 @@ export function Navbar(username) {
 
   return `
         <nav class="navbar">
-            <div class="logo">
-                <span class="logo-icon">🎮</span>
-                GameMatch
+            <div class="logo" id="game-match-logo">
+                <a href="#/">
+                    <span class="logo-icon">🎮</span>
+                    GameMatch
+                </a>
             </div>
             <ul class="nav-links">
                 <li id="nav-beranda"><a href="#/">Beranda</a></li>
                 <li id="nav-koleksi"><a href="#/koleksi">Koleksi</a></li>
-                <li id="nav-tentang"><a href="#/tentang">Tentang Kami</a></li>
-                <li><a href="#/blog">Blog</a></li>
+                <li id="nav-tentang"><a href="#/chatbot">Chatbot</a></li>
+                <li id="nav-tentang"><a href="#/TentangKami">Tentang Kami</a></li>
             </ul>
             <div class="auth-buttons">
                 ${authButtons}

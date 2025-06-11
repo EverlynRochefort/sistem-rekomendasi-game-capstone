@@ -39,6 +39,21 @@ export function handleRouting() {
       app.innerHTML = await module.renderRekomendasiPage();
       module.attachRekomendasiHandler();
     });
+  } else if (window.location.hash === "#/chatbot") {
+    const username = localStorage.getItem("username");
+    if (username) {
+      import("./chatbotpage.js").then(async (module) => {
+        app.innerHTML = await module.renderChatbotPage();
+      });
+    } else {
+      alert("Silakan login terlebih dahulu untuk mengakses fitur Chatbot.");
+      window.location.hash = "#/login";
+    }
+  } else if (window.location.hash === "#/TentangKami") {
+    import("./tentangKamiPage.js").then(async (module) => {
+      app.innerHTML = await module.renderTentangkamiPage();
+      module.attachTentangKamiHandlers();
+    });
   } else {
     render();
   }
@@ -64,7 +79,7 @@ async function render() {
   /* use component for navbar and footer */
   app.innerHTML = `
     ${Navbar(username)}
-
+    <div class="homepage-wrapper">
     <section class="hero">
         <h1>Temukan Game Terbaik untuk Anda</h1>
         <p>Sistem rekomendasi game pintar yang memahami selera Anda dan menyarankan game yang akan Anda sukai.</p>
@@ -125,10 +140,10 @@ async function render() {
               `<button id="signup-btn" class="signup-btn">Dapatkan Rekomendasi</button>` :
               `<button id="signup-btn" class="signup-btn">Yuk Mulai!</button>`
             }
-            <a href="#" class="learn-more">Pelajari Lebih Lanjut</a>
+            <a href="#" class="learn-more"></a>
         </section>
     </main>
-
+    </div>
     ${Footer()}
     `;
 
@@ -272,6 +287,14 @@ async function render() {
   if (navKoleksi) {
     navKoleksi.addEventListener("click", () => {
       window.location.hash = "#/koleksi";
+    });
+  }
+
+  // Add event listener for the GameMatch logo to return to homepage
+  const gameMatchLogo = document.getElementById("game-match-logo");
+  if (gameMatchLogo) {
+    gameMatchLogo.addEventListener("click", () => {
+      window.location.hash = "#/";
     });
   }
 }

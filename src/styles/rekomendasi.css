@@ -1,4 +1,4 @@
-/* rekomendasi.css */
+
 
 .rekomendasi-wrapper {
     margin: 0;
@@ -92,13 +92,13 @@ input[type="number"] {
     box-shadow: 0 5px 15px rgba(255, 0, 153, 0.4);
 }
 
-.game-grid {
+.rekomendasi-wrapper .game-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
 }
 
-.game-card {
+.rekomendasi-wrapper .game-card {
     background: rgba(255, 255, 255, 0.06);
     border-radius: 15px;
     padding: 15px;
@@ -107,7 +107,7 @@ input[type="number"] {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-.game-card:hover {
+.rekomendasi-wrapper .game-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }

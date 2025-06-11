@@ -71,16 +71,12 @@ body {
 }
 
 .nav-links li a {
-  color: white; /* added this for the navbar !important */
+  color: white;
 }
 
 .nav-links li:hover,
 .nav-links li.active {
   color: var(--primary-color);
-}
-
-.nav-links li.active a {
-  text-decoration: underline;
 }
 
 .auth-buttons {
@@ -175,7 +171,7 @@ body {
 
 .search-btn {
   margin-left: 5px;
-  padding: 12px 16px;
+  padding: 10px 12px;
   border-radius: 50px;
   border: none;
   background: rgba(255, 255, 255, 0.2);
@@ -282,11 +278,11 @@ main {
 
 .game-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
   gap: 2.5rem;
   margin-top: 30px;
   justify-content: center;
-  max-width: 1300px;
+  max-width: 1400px;
   margin: 20px auto 0 auto;
   padding-bottom: 20px;
 }
@@ -688,4 +684,9 @@ main {
 
 .koleksi-section h2 {
   padding-left: 40px;
+}
+
+.logo a{
+  text-decoration: none;
+  color: white;
 }

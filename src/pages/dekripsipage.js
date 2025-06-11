@@ -86,7 +86,6 @@ export async function renderDeskripsiPage(appId) {
                 data.website || `https://store.steampowered.com/app/${appId}`
               }" target="_blank" class="trailer-btn">Tonton Trailer</a>
               <button class="koleksi-btn">+ Tambah ke Koleksi</button>
-              <button class="share-btn">Bagikan</button>
             </div>
           </div>
         </div>
