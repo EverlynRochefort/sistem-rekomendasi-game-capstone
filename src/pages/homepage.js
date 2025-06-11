@@ -39,6 +39,15 @@ export function handleRouting() {
       app.innerHTML = await module.renderRekomendasiPage();
       module.attachRekomendasiHandler();
     });
+  } else if (window.location.hash === "#/chatbot") {
+      import("./chatbotpage.js").then(async (module) => {
+        app.innerHTML = await module.renderChatbotPage();
+      });
+  } else if (window.location.hash === "#/TentangKami") {
+    import("./tentangKamiPage.js").then(async (module) => {
+      app.innerHTML = await module.renderTentangkamiPage();
+      module.attachTentangKamiHandlers();
+    });
   } else {
     render();
   }
@@ -64,7 +73,7 @@ async function render() {
   /* use component for navbar and footer */
   app.innerHTML = `
     ${Navbar(username)}
-
+    <div class="homepage-wrapper">
     <section class="hero">
         <h1>Temukan Game Terbaik untuk Anda</h1>
         <p>Sistem rekomendasi game pintar yang memahami selera Anda dan menyarankan game yang akan Anda sukai.</p>
@@ -128,7 +137,7 @@ async function render() {
             <a href="#" class="learn-more">Pelajari Lebih Lanjut</a>
         </section>
     </main>
-
+    </div>
     ${Footer()}
     `;
 

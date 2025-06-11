@@ -19,8 +19,8 @@ export function Navbar(username) {
             <ul class="nav-links">
                 <li id="nav-beranda"><a href="#/">Beranda</a></li>
                 <li id="nav-koleksi"><a href="#/koleksi">Koleksi</a></li>
-                <li id="nav-tentang"><a href="#/tentang">Tentang Kami</a></li>
-                <li><a href="#/blog">Blog</a></li>
+                <li id="nav-tentang"><a href="#/chatbot">Chatbot</a></li>
+                <li id="nav-tentang"><a href="#/TentangKami">Tentang Kami</a></li>
             </ul>
             <div class="auth-buttons">
                 ${authButtons}
