@@ -23,7 +23,9 @@ export async function getRecommendedGames(gameName, numberOfRecommendations) {
       if (similarGames.length > 0) {
         return similarGames.slice(0, numberOfRecommendations || 5);
       } else {
-        console.warn("No similar games found by name, falling back to popular games.");
+        console.warn(
+          "No similar games found by name, falling back to popular games."
+        );
       }
     }
 
@@ -224,7 +226,9 @@ export async function getSimilarGames(appId) {
 
 async function getSimilarGamesByName(gameName) {
   try {
-    const searchUrl = `http://localhost:3001/api/search?query=${encodeURIComponent(gameName)}`;
+    const searchUrl = `http://localhost:3001/api/search?query=${encodeURIComponent(
+      gameName
+    )}`;
     const response = await fetch(searchUrl);
     const appids = await response.json();
 
@@ -251,5 +255,42 @@ async function getSimilarGamesByName(gameName) {
   } catch (error) {
     console.error("Error fetching similar games by name:", error);
     return [];
+  }
+}
+
+export async function parseMLRecommendation(gameName, k) {
+  // IMPORTANT: Replace this with the actual URL where your FastAPI is running.
+  // For local development, it's typically 'http://127.0.0.1:8000' or 'http://localhost:8000'.
+  const API_BASE_URL = "http://127.0.0.1:8000";
+  const endpoint = `${API_BASE_URL}/similar_games/`;
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // The body must match the GameRequest Pydantic model in your ml_api.py
+      body: JSON.stringify({ game_name: gameName, k: parseInt(k, 10) }),
+    });
+
+    if (!response.ok) {
+      // Attempt to parse a detailed error message from the backend's HTTPException
+      const errorData = await response.json();
+      // If the backend provides a 'detail' field (like FastAPI's HTTPException), use it.
+      // Otherwise, provide a generic HTTP status error.
+      throw new Error(
+        errorData.detail || `HTTP error! Status: ${response.status}`
+      );
+    }
+
+    const data = await response.json();
+    // Your FastAPI returns an object with a 'recommendations' array (e.g., {query: "...", recommendations: [...]})
+    return data.recommendations || [];
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error("Error fetching recommendations from ML API:", error);
+    // Re-throw the error so the calling function (in rekomendasiPage.js) can handle it and display to the user
+    throw error;
   }
 }
