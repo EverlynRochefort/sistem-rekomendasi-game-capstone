@@ -80,14 +80,28 @@ export async function renderTentangkamiPage() {
     `;
 }
 
+//fungsi button logout untuk ke halaman beranda sebelum login
 export function attachTentangKamiHandlers() {
     const logoutBtn = document.getElementById("logout-btn");
     if (logoutBtn) {
         logoutBtn.addEventListener("click", () => {
             localStorage.removeItem("username");
             window.location.hash = "#/";
-            // Re-render the page to update the navbar
             window.location.reload(); 
+        });
+    }
+
+    const loginBtn = document.getElementById("login-btn");
+    if (loginBtn) {
+        loginBtn.addEventListener("click", () => {
+            window.location.hash = "#/login";
+        });
+    }
+
+    const registerBtn = document.getElementById("register-btn");
+    if (registerBtn) {
+        registerBtn.addEventListener("click", () => {
+            window.location.hash = "#/register";
         });
     }
 }

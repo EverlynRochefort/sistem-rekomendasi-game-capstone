@@ -12,9 +12,11 @@ export function Navbar(username) {
 
   return `
         <nav class="navbar">
-            <div class="logo">
-                <span class="logo-icon">🎮</span>
-                GameMatch
+            <div class="logo" id="game-match-logo">
+                <a href="#/">
+                    <span class="logo-icon">🎮</span>
+                    GameMatch
+                </a>
             </div>
             <ul class="nav-links">
                 <li id="nav-beranda"><a href="#/">Beranda</a></li>

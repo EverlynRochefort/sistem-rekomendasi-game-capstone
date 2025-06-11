@@ -4,23 +4,23 @@ export function RegisterPage() {
     <!-- Left Side - Register Form -->
     <div class="register-form-section">
         <div class="register-form">
-            <h1 class="register-title">Join With Us</h1>
+            <h1 class="register-title">Bergabunglah dengan kami</h1>
 
             <form id="registerForm">
                 <div class="form-group">
-                    <input id="username" type="text" class="form-input" placeholder="Your Name">
+                    <input id="username" type="text" class="form-input" placeholder="Username kamu">
                 </div>
                 <div class="form-group">
                     <input id="email" type="text" class="form-input" placeholder="example@gmail.com">
                 </div>
                 <div class="form-group">
-                    <input id="password" type="password" class="form-input" placeholder="••••••••">
+                    <input id="password" type="password" class="form-input" placeholder="Password">
                 </div>
                 <div class="form-group">
-                    <input id="confirmPassword" type="password" class="form-input" placeholder="Confirm Password">
+                    <input id="confirmPassword" type="password" class="form-input" placeholder="Konfirmasi Password">
                 </div>
                 <div id="errorMessage" style="color:red;"></div>
-                <button type="submit" class="register-btn-in">Sign Up</button>
+                <button type="submit" class="register-btn-in">Gabung</button>
             </form>
 
             <div class="divider">or signup with</div>
@@ -34,11 +34,11 @@ export function RegisterPage() {
 
     <!-- Right Side - Welcome Section -->
     <div class="register-welcome-section">
-        <h1 class="welcome-title">Join our community!</h1>
+        <h1 class="welcome-title">Bergabunglah agar bisa membuka fitur rekomendasi dan chatbot secara gratis!</h1>
         <p class="welcome-text">
-            Create an account to connect with others! We're excited to have you join us. Sign up today and become a part of our growing community.
+            kami sangat senang menyambut anda disini!.
         </p>
-        <p class="signin-text">Already have an account? <a href="#/login">Sign in.</a></p>
+        <p class="signin-text">sudah punya akun? <a href="#/login">Masuk.</a></p>
     </div>
 </div>
   `;

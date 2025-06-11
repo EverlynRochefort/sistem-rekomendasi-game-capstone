@@ -40,9 +40,15 @@ export function handleRouting() {
       module.attachRekomendasiHandler();
     });
   } else if (window.location.hash === "#/chatbot") {
+    const username = localStorage.getItem("username");
+    if (username) {
       import("./chatbotpage.js").then(async (module) => {
         app.innerHTML = await module.renderChatbotPage();
       });
+    } else {
+      alert("Silakan login terlebih dahulu untuk mengakses fitur Chatbot.");
+      window.location.hash = "#/login";
+    }
   } else if (window.location.hash === "#/TentangKami") {
     import("./tentangKamiPage.js").then(async (module) => {
       app.innerHTML = await module.renderTentangkamiPage();
@@ -134,7 +140,7 @@ async function render() {
               `<button id="signup-btn" class="signup-btn">Dapatkan Rekomendasi</button>` :
               `<button id="signup-btn" class="signup-btn">Yuk Mulai!</button>`
             }
-            <a href="#" class="learn-more">Pelajari Lebih Lanjut</a>
+            <a href="#" class="learn-more"></a>
         </section>
     </main>
     </div>
@@ -281,6 +287,14 @@ async function render() {
   if (navKoleksi) {
     navKoleksi.addEventListener("click", () => {
       window.location.hash = "#/koleksi";
+    });
+  }
+
+  // Add event listener for the GameMatch logo to return to homepage
+  const gameMatchLogo = document.getElementById("game-match-logo");
+  if (gameMatchLogo) {
+    gameMatchLogo.addEventListener("click", () => {
+      window.location.hash = "#/";
     });
   }
 }
