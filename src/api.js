@@ -38,6 +38,34 @@ async function searchAppIds(query) {
   }
 }
 
+export async function sendChatMessage(messageText, k = 5) {
+  const endpoint = `${ML_BASE_URL}/chatbot/`; // ML_BASE_URL is already defined
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text: messageText, k: k }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        errorData.detail || `HTTP error from ML API! Status: ${response.status}`
+      );
+    }
+
+    const data = await response.json();
+    // The backend's /chatbot/ endpoint returns "recommendations" which are the similar products/answers
+    return data.recommendations || [];
+  } catch (error) {
+    console.error("Error sending message to chatbot API:", error);
+    // You might want to return a user-friendly error message here
+    throw error;
+  }
+}
+
 export async function parseMLRecommendation(gameName, k) {
   const endpoint = `${ML_BASE_URL}/similar_games/`;
   try {

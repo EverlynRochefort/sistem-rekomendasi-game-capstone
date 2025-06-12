@@ -1,9 +1,10 @@
 import "../styles/chatbot.css";
 import { Navbar, Footer } from "../components/index.js";
+import { sendChatMessage } from "../api.js";
 
 export async function renderChatbotPage() {
-    const username = localStorage.getItem("username");
-    return `
+  const username = localStorage.getItem("username");
+  return `
     ${Navbar(username)}
     <div class="bg-animation" id="bgAnimation"></div>
 
@@ -74,25 +75,25 @@ export async function renderChatbotPage() {
 
 // Placeholder functions to prevent errors for UI focus
 window.adjustTextareaHeight = () => {
-    const textarea = document.getElementById("messageInput");
-    if (textarea) {
-        textarea.style.height = "auto";
-        textarea.style.height = textarea.scrollHeight + "px";
-    }
+  const textarea = document.getElementById("messageInput");
+  if (textarea) {
+    textarea.style.height = "auto";
+    textarea.style.height = textarea.scrollHeight + "px";
+  }
 };
 
 window.handleKeyPress = (event) => {
-    if (event.key === "Enter" && !event.shiftKey) {
-        event.preventDefault();
-        window.sendMessage();
-    }
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    window.sendMessage();
+  }
 };
 
 window.clearChat = () => {
-    console.log('Clear Chat clicked (placeholder)');
-    const messagesContainer = document.getElementById("messagesContainer");
-    if (messagesContainer) {
-        messagesContainer.innerHTML = `
+  console.log("Clear Chat clicked (placeholder)");
+  const messagesContainer = document.getElementById("messagesContainer");
+  if (messagesContainer) {
+    messagesContainer.innerHTML = `
             <div class="welcome-message">
                 <h3 class="welcome-title">🎮 Welcome to GameBot!</h3>
                 <p class="welcome-subtitle">
@@ -101,60 +102,73 @@ window.clearChat = () => {
                 </p>
             </div>
         `;
-    }
+  }
 };
 
 window.toggleTheme = () => {
-    console.log('Toggle Theme clicked (placeholder)');
-    alert('Theme toggling not implemented yet.');
+  console.log("Toggle Theme clicked (placeholder)");
+  alert("Theme toggling not implemented yet.");
 };
 
 window.sendQuickMessage = (message) => {
-    console.log(`Quick Message sent: ${message} (placeholder)`);
-    const messageInput = document.getElementById("messageInput");
-    if (messageInput) {
-        messageInput.value = message;
-        window.sendMessage(); // Simulate sending the quick message
-    }
+  console.log(`Quick Message sent: ${message} (placeholder)`);
+  const messageInput = document.getElementById("messageInput");
+  if (messageInput) {
+    messageInput.value = message;
+    window.sendMessage();
+  }
 };
 
-window.sendMessage = () => {
-    console.log('Send Message clicked (placeholder)');
-    const messageInput = document.getElementById("messageInput");
-    if (messageInput) {
-        const message = messageInput.value.trim();
-        if (message) {
-            console.log('Message sent:', message);
-            // You can add logic to display the message in the chat here if needed for UI demo
-            window.appendMessage(message, 'user-message'); // Display user message
-            messageInput.value = '';
-            window.adjustTextareaHeight();
-            
-            const typingIndicator = document.getElementById("typingIndicator");
-            if (typingIndicator) typingIndicator.style.display = 'flex';
+window.sendMessage = async () => {
+  const messageInput = document.getElementById("messageInput");
+  if (messageInput) {
+    const userMessage = messageInput.value.trim();
+    if (userMessage) {
+      window.appendMessage(userMessage, "user-message");
+      messageInput.value = "";
+      window.adjustTextareaHeight();
 
-            // Simulate bot response
-            setTimeout(() => {
-                if (typingIndicator) typingIndicator.style.display = 'none';
-                window.appendMessage("Hello! How can I assist you with games today?", 'bot-message');
-            }, 1500);
+      const typingIndicator = document.getElementById("typingIndicator");
+      if (typingIndicator) typingIndicator.style.display = "flex";
+
+      try {
+        const botResponses = await sendChatMessage(userMessage);
+
+        if (typingIndicator) typingIndicator.style.display = "none";
+
+        if (botResponses && botResponses.length > 0) {
+          window.appendMessage(botResponses[0].name, "bot-message");
+        } else {
+          window.appendMessage(
+            "Maaf, saya tidak mengerti pertanyaan Anda. Bisakah Anda mengulanginya atau bertanya tentang hal lain?",
+            "bot-message"
+          );
         }
+      } catch (error) {
+        if (typingIndicator) typingIndicator.style.display = "none";
+        console.error("Failed to get bot response:", error);
+        window.appendMessage(
+          "Terjadi kesalahan saat memproses permintaan Anda. Mohon coba lagi nanti.",
+          "bot-message"
+        );
+      }
     }
+  }
 };
 
 window.appendMessage = (text, type) => {
-    const messagesContainer = document.getElementById("messagesContainer");
-    if (messagesContainer) {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message', type);
+  const messagesContainer = document.getElementById("messagesContainer");
+  if (messagesContainer) {
+    const messageElement = document.createElement("div");
+    messageElement.classList.add("message", type);
 
-        const avatar = type === 'user-message' ? '👤' : '🎮';
+    const avatar = type === "user-message" ? "👤" : "🎮";
 
-        messageElement.innerHTML = `
+    messageElement.innerHTML = `
             <div class="message-avatar">${avatar}</div>
             <div class="message-content">${text}</div>
         `;
-        messagesContainer.appendChild(messageElement);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
+    messagesContainer.appendChild(messageElement);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
 };
