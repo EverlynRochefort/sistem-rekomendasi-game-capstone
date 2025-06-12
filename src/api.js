@@ -39,7 +39,7 @@ async function searchAppIds(query) {
 }
 
 export async function sendChatMessage(messageText, k = 5) {
-  const endpoint = `${ML_BASE_URL}/chatbot/`; 
+  const endpoint = `${ML_BASE_URL}/chatbot/`;
   try {
     const response = await fetch(endpoint, {
       method: "POST",
